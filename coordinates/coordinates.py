@@ -109,6 +109,6 @@ for i in range(0,len(coordinates)-1):
         log.info(str(i)+"/"+str(len(coordinates)-1))
 
     #Make sure we don't go over 2500 quota
-    time.sleep(10)
+    time.sleep(5)
 
 file.close()
