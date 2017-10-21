@@ -65,7 +65,7 @@ def createGrid():
     #Stepsize 1562.5 = 1km (268,863 map points)
 
 
-    stepsize = 100000 # 5 km grid step size
+    stepsize = 7812.5 # 5 km grid step size
 
     # Project corners to target projection
     s = pyproj.transform(p_ll, p_mt, nw.x, nw.y) # Transform NW point to 3857
