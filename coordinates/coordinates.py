@@ -65,7 +65,7 @@ def createGrid():
     #Stepsize 1562.5 = 1km (268,863 map points)
 
 
-    stepsize = 7812.5 # 5 km grid step size
+    stepsize = 100000 # 5 km grid step size
 
     # Project corners to target projection
     s = pyproj.transform(p_ll, p_mt, nw.x, nw.y) # Transform NW point to 3857
@@ -109,11 +109,10 @@ for i in range(0,len(coordinates)-1):
     while (data['status'] == 'OVER_QUERY_LIMIT'):
         log.info('Quota exceeded, going to sleep for an hour')
         log.warn('Last known coordinate was: ' + str(data))
-        time.sleep(10)
+        time.sleep(3600)
         log.info('Waking up. Checking if quota is renewed')
         data = getResponse(coordinates[i].x, coordinates[i].y,API_GEOCODING)
         print(i)
-
 
     if isCountry('PL', getCountry(data)) == True:
         file.write(str(coordinates[i].x) + ',' + str(coordinates[i].y) + '\n')
@@ -121,6 +120,6 @@ for i in range(0,len(coordinates)-1):
     log.info("Coordinate " + str(i+1) + "/" + str(len(coordinates)-1) + "  " + str(coordinates[i].x) + ',' + str(coordinates[i].y))
     print("Coordinate " + str(i+1) + "/" + str(len(coordinates)-1) + "  " + str(coordinates[i].x) + ',' + str(coordinates[i].y))
     #Make sure we don't go over 2500 quota
-    #time.sleep(10)
+    time.sleep(1)
 
 file.close()
