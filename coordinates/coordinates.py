@@ -13,8 +13,6 @@ log = logging.getLogger('logentries')
 log.setLevel(logging.INFO)
 log.addHandler(LogentriesHandler('56926f61-286f-4224-9ff3-e23ebfa858f6'))
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 API_PLACES = "AIzaSyDHoS63IY3s5KczZujHBhhl70mrQLVo-QE"
 API_GEOCODING = "AIzaSyDOlH5P4SiOy7FqVqqNxu03KIWWm4ucRJM"
@@ -43,7 +41,7 @@ def getCountry(reply):
 
         #4. Make sure the country was found. If not, log.
         if country_found == False:
-            logger.info('Country not found')
+            log.info('Country not found')
 
 #Check if country found is within wanted borders
 def isCountry(country_searched, country_found):
@@ -89,26 +87,40 @@ def createGrid():
 
 ###### MAIN ######
 
-file = open('poland_coordinates.txt','w')
+#Save all coordinates to a file
+all_coordinates = open('all_coordinates.txt', 'w')
 coordinates = createGrid()
 
 for i in range(0,len(coordinates)-1):
+    all_coordinates.write(str(coordinates[i].x) + ',' + str(coordinates[i].y) + '\n')
+all_coordinates.close()
+
+
+#Save only necessary coordinates to a file
+
+file = open('poland_coordinates.txt','w')
+coordinates = createGrid()
+
+
+for i in range(0,len(coordinates)-1):
+
     data = getResponse(coordinates[i].x, coordinates[i].y,API_GEOCODING)
 
-
     while (data['status'] == 'OVER_QUERY_LIMIT'):
-        logger.info('Quota exceeded, going to sleep for an hour')
-        time.sleep(3600)
-        logger.info('Waking up. Checking if quota is renewed')
+        log.info('Quota exceeded, going to sleep for an hour')
+        log.warn('Last known coordinate was: ' + str(data))
+        time.sleep(10)
+        log.info('Waking up. Checking if quota is renewed')
         data = getResponse(coordinates[i].x, coordinates[i].y,API_GEOCODING)
         print(i)
 
 
     if isCountry('PL', getCountry(data)) == True:
         file.write(str(coordinates[i].x) + ',' + str(coordinates[i].y) + '\n')
-        log.info(str(i)+"/"+str(len(coordinates)-1))
 
+    log.info("Coordinate " + str(i+1) + "/" + str(len(coordinates)-1) + "  " + str(coordinates[i].x) + ',' + str(coordinates[i].y))
+    print("Coordinate " + str(i+1) + "/" + str(len(coordinates)-1) + "  " + str(coordinates[i].x) + ',' + str(coordinates[i].y))
     #Make sure we don't go over 2500 quota
-    time.sleep(5)
+    #time.sleep(10)
 
 file.close()
