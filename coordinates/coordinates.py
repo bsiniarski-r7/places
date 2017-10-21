@@ -109,7 +109,8 @@ for i in range(0,len(coordinates)-1):
     while (data['status'] == 'OVER_QUERY_LIMIT'):
         log.info('Quota exceeded, going to sleep for an hour')
         log.warn('Last known coordinate was: ' + str(data))
-        time.sleep(3600)
+        #Sleep for 12 hours
+        time.sleep(43200)
         log.info('Waking up. Checking if quota is renewed')
         data = getResponse(coordinates[i].x, coordinates[i].y,API_GEOCODING)
         print(i)
