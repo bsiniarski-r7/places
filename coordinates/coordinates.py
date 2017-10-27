@@ -102,7 +102,7 @@ file = open('poland_coordinates.txt','w')
 coordinates = createGrid()
 
 
-for i in range(0,len(coordinates)-1):
+for i in range(75083,len(coordinates)-1):
 
     data = getResponse(coordinates[i].x, coordinates[i].y,API_GEOCODING)
 
